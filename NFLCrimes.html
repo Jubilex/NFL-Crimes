@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>NFL Crimes</title>
+	</head>
+	<body>
+
+	</body>
+	<!-- CHANGE TO THIS-->
+	<script src="foo.js"></script>
+	<script>
+		// put last so file loads first
+		async function foo() {
+			const res = await fetch('https://www.balldontlie.io/api/v1/season_averages?season=2018&player_ids[]=5&player_ids[]=237');
+			const data = await res.json();
+			console.log(data);
+		}
+		foo();
+	</script>
+</html>
+
+<!--
+talk about oclient server and javascript on client
+servers vs browsers
+all calls take a while
+block = bad
+Talk about async programming
+-->
