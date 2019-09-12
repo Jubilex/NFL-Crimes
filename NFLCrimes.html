@@ -1,32 +1,121 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>NFL Crimes</title>
-	</head>
-	<body>
 
-	</body>
-	<!-- CHANGE TO THIS-->
-	<script src="foo.js"></script>
-	<script>
-		// put last so file loads first
-		async function foo() {
-			const res = await fetch('https://www.balldontlie.io/api/v1/season_averages?season=2018&player_ids[]=5&player_ids[]=237');
-			const data = await res.json();
-			console.log(data);
+<head>
+	<meta charset="UTF-8">
+	<title>NFL Crimes</title>
+
+			<!-- add one style thing at a time! -->
+	<style>
+		.foo {
+			border: 1px solid #bbb;
+			border-radius: 2px;
+			box-shadow: 2px 4px #888;
+			padding: 16px;
+			width: 333px;
+			display: inline-block;
+			font-family: sans-serif;
 		}
-		foo();
-	</script>
+		.foo:hover h2 {
+			display: block;
+		}
+		.foo h2 {
+			display: none
+		}
+	</style>
+
+</head>
+
+<body>
+	<input type="text" id="NameInput" />
+	<!-- GOOGLE button on click-->
+	<button onclick="getData()">Get</button>
+	<div class="player-wrapper"></div>
+</body>
+<script>
+	// talk about DOM
+	document.addEventListener("DOMContentLoaded", function(event) { 
+		// do work;
+	});
+
+
+	async function getData() {
+		const name = document.getElementById('NameInput').value;
+		const players = await getPlayersData(name);
+		displayPlayers(players);
+	}
+	function displayPlayers(players) {
+		let htmlOutput = ``;
+		for (let player of players) {
+					/* Later */htmlOutput+=`<div class='foo'>`;
+			htmlOutput += `<h1>${player.first_name} ${player.last_name}</h1>`
+			if (player.playerData && player.playerData.games_played) {
+				htmlOutput += `<h2>Games played: ${player.playerData.games_played}</h2>`
+			} else {
+				htmlOutput += `<h2>Games played: No data</h2>`
+			}
+			if (player.playerData && player.playerData.pts) {
+				htmlOutput += `<h2>Avg Points: ${player.playerData.pts}</h2>`
+			} else {
+				htmlOutput += `<h2>Avg Points: No data</h2>`
+			}
+					/* Later */htmlOutput+= `</div>`;
+		}
+		document.getElementsByClassName("player-wrapper")[0].innerHTML = htmlOutput;
+	}
+
+	async function getPlayersData(nameFilter) {
+		const players = await getAllPlayersWithName(nameFilter);
+		for (let player of players) {
+			const playerData = await getDataForPlayer(player.id);
+			player.playerData = playerData;
+		}
+		return players;
+	}
+
+	// separate all stuff into async function
+	async function getAllPlayersWithName(nameFilter) {
+		// use const over let cause optimizes runtime (know dont have to write to it later);
+		// SHOW WITHOUT PERPAGE AND ADD IT, STILL NOT BEST WAY BUT OK FOR NOW
+		// SHOW NETWORK TAB
+		const res = await fetch('https://www.balldontlie.io/api/v1/players?search=' + nameFilter + '&per_page=10');
+		const players = await res.json();
+		return players.data;
+	}
+	async function getDataForPlayer(id) {
+		res = await fetch('https://www.balldontlie.io/api/v1/season_averages?season=2018&player_ids[]=' + id);
+		playerData = await res.json();
+		console.log(playerData);
+		return playerData.data[0];
+	}
+</script>
+
 </html>
 
 <!--
+	ADAM:Nov date to program?  you give me the content i assume?   what will they know when i show up?  
+	they know browser inspect, network, console, elements tabs?  css classes or just style? querystrings? vscode?
+	do theh know about the DOM?
+
+	Just like when Austin had best class ever it was cause he fnot that i want them to know that stuff.  i will teach if they dont know and i expect that i have to.  or i will anyway cause its important/pertinent to what i'll be going over.
+also i'm going javascript heavy.  do you rather want css heavy?  i'm definitely html light
+
+ollowed entire thing.  I want to go slow
+	enough everyone has that experience.  What will they know exactly going into it.
+
+	VSCODE SHOW TEACH DOWNLOAD
+1st day raw javascript and discussion
+2nd day cleanup with 3rd party utilities
+teach === and == and javascript is LOOSE
 	Hi Steve.  Work for OU, I write one.ou.edu.  new version written in Angular 8 soon.
 	So for some of you this semester between all your classes you're learning a bunch of differe t languages,
-	SQL, vbasic, c# and now javascript!  I'm going to purposely go slow because I want everyone to follow
-	what I'm doing and not be lost.  STOP me, ask questions if you are not with me.  I don't know what you don't
+	SQL, vbasic, c# and now javascript!  Now i'm sure you are like "o great", so I'm going to purposely go slow because I want everyone to follow
+	what I'm doing and not be lost.  We are not doing anything complex, rather something simple/basic so you can
+	follow.  STOP me, ask questions if you are not with me.  I don't know what you don't
 	know so if you don't stop me you may be lost.  Chances are if you dont know someone else doesnt either.  I will stop and
 	call on some of you to answer a question to make sure you are following! :):w
+
+	Like all good programmer, we will be using google to help us!
 
 	slides: sometimes its good to stop and just think about what is going on...
 	www: where is your code running?  why important?  need to make requests for data and
@@ -36,4 +125,15 @@ servers vs browsers
 all calls take a while
 block = bad
 Talk about async programming
+
+Browser inspect / Network tab, console, elements teach!
+HTTP calls, verbs.  GET & browser calls are all get.  query strings to pass data/params
+
+teach id="xxx" and how its BAD BAD, then change to by class
+all done manually via raw javascript.  Certainly easier ways!  jquery, ?bootstrap?, angular
+
+
+CLEANUP
+	 CHANGE TO THIS
+	<script src="foo.js"></script>
 -->
