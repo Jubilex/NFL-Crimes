@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Pokemon Pix</title>
+</head>
+
+<body>
+	<input type="text" id="pokemonInput" />
+	<button onclick="getPokemonImage()">Get Image</button>
+	<img src="" />
+</body>
+<script>
+	document.addEventListener("DOMContentLoaded", function (event) {
+		// do work;
+	});
+
+	async function getPokemonImage() {
+		const name = document.getElementById('pokemonInput').value;
+		const pokemon = await getPokemonData(name);
+		displayPokemon(pokemon);
+	}
+
+	async function getPokemonData(nameFilter) {
+		// use const over let cause optimizes runtime (know dont have to write to it later);
+		// SHOW WITHOUT PERPAGE AND ADD IT, STILL NOT BEST WAY BUT OK FOR NOW
+		// SHOW NETWORK TAB
+		// SHOW === EXAMPLE
+		let foo = fetch('https://pokeapi.co/api/v2/pokemon/' + nameFilter);
+		const res = await foo;
+		const pokemon = await res.json();
+		// CATCH 404
+		console.log(pokemon);
+		return pokemon;
+//		const res = await fetch('https://www.balldontlie.io/api/v1/players?search=' + nameFilter + '&per_page=10');
+//		const players = await res.json();
+//		return players.data;
+	}
+	function displayPokemon(pokemon) {
+		document.getElementsByTagName('img')[0].src = pokemon.sprites.back_default;
+	}
+</script>
+
+</html>
