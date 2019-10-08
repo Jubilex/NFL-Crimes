@@ -46,19 +46,6 @@ show .boxDiv in CSS  or button {} in css etc
 IMPORTANT THING TO NOTE:  Not specifics of how to do things.  instead how to google what you want and apply it to your project
 
 
-document.getElementById("myButton").onclick = changeColor;
-let x = "1";
-function changeColor() {
-	
-  
-  if (x === 1) {
-	document.getElementsByClassName("myDiv")[0].style.backgroundColor = "red";
-  x++;
-  } else {
-  	document.getElementsByClassName("myDiv")[0].style.backgroundColor = "pink";
-  }
-}
-
 show TOP and LEFT with 0 and 50 then change to 0 and 50px!
 
 TRY MOUSEOVER THEN MOUSEMOVE
