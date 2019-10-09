@@ -8,7 +8,8 @@
 <body>
 	<input type="text" id="pokemonInput" />
 	<button onclick="getPokemonImage()">Get Image</button>
-	<img src="" />
+	<img />
+	<div id="errorMessage" style="color: red"></div>
 </body>
 <script>
 	document.addEventListener("DOMContentLoaded", function (event) {
@@ -17,17 +18,25 @@
 
 	async function getPokemonImage() {
 		const name = document.getElementById('pokemonInput').value;
-		const pokemon = await getPokemonData(name);
-		displayPokemon(pokemon);
+		const pokemonImageUrl = getPokemonData(name);
+		console.log('IMAGE URL');
+		console.log(pokemonImageUrl);
+		displayPokemon(pokemonImageUrl);
 	}
 
 	async function getPokemonData(nameFilter) {
-		// use const over let cause optimizes runtime (know dont have to write to it later);
 		// SHOW WITHOUT PERPAGE AND ADD IT, STILL NOT BEST WAY BUT OK FOR NOW
-		// SHOW NETWORK TAB
-		// SHOW === EXAMPLE
 		let foo = fetch('https://pokeapi.co/api/v2/pokemon/' + nameFilter);
 		const res = await foo;
+		if (res.status !== 200) {
+			if (res.status === 404) {
+				document.getElementById('errorMessage').innerHTML = "Could not find " + nameFilter;
+			} else {
+				document.getElementById('errorMessage').innerHTML = "Unknown error";
+			}
+
+		}
+		console.log('INSIDE GETPOKENON DATA');
 		const pokemon = await res.json();
 		// CATCH 404
 		console.log(pokemon);
