@@ -6,44 +6,49 @@
 </head>
 
 <body>
+	<select name="foo" id="pokemonDropdown">
+	<option value="empty"></option></select>
 	<input type="text" id="pokemonInput" />
 	<button onclick="getPokemonImage()">Get Image</button>
 	<img />
 	<div id="errorMessage" style="color: red"></div>
 </body>
 <script>
-	document.addEventListener("DOMContentLoaded", function (event) {
-		// do work;
+	document.addEventListener("DOMContentLoaded", async function (event) {
+		const allPokemon = await getAllPokemon();
+		const pokemonDropdown = document.getElementById('pokemonDropdown');
+		allPokemon.results.forEach(element => {
+			pokemonDropdown.innerHTML += `<option value="${element.name}">${element.name}</option>`;
+		});
 	});
 
 	async function getPokemonImage() {
-		const name = document.getElementById('pokemonInput').value;
-		const pokemonImageUrl = getPokemonData(name);
-		console.log('IMAGE URL');
+		const name = document.getElementById('pokemonDropdown').value;
+		const pokemonImageUrl = await getPokemonData(name);
 		console.log(pokemonImageUrl);
 		displayPokemon(pokemonImageUrl);
 	}
 
-	async function getPokemonData(nameFilter) {
-		// SHOW WITHOUT PERPAGE AND ADD IT, STILL NOT BEST WAY BUT OK FOR NOW
-		let foo = fetch('https://pokeapi.co/api/v2/pokemon/' + nameFilter);
+	async function getAllPokemon() {
+		const foo = fetch('https://pokeapi.co/api/v2/pokemon?limit=964');
+		const res = await foo;
+		const allPokemon = await res.json();
+		return allPokemon;
+	}
+
+	async function getPokemonData(name) {
+		let foo = fetch('https://pokeapi.co/api/v2/pokemon/' + name);
 		const res = await foo;
 		if (res.status !== 200) {
 			if (res.status === 404) {
-				document.getElementById('errorMessage').innerHTML = "Could not find " + nameFilter;
+				document.getElementById('errorMessage').innerHTML = "Could not find " + name;
 			} else {
 				document.getElementById('errorMessage').innerHTML = "Unknown error";
 			}
 
 		}
-		console.log('INSIDE GETPOKENON DATA');
 		const pokemon = await res.json();
-		// CATCH 404
-		console.log(pokemon);
 		return pokemon;
-//		const res = await fetch('https://www.balldontlie.io/api/v1/players?search=' + nameFilter + '&per_page=10');
-//		const players = await res.json();
-//		return players.data;
 	}
 	function displayPokemon(pokemon) {
 		document.getElementsByTagName('img')[0].src = pokemon.sprites.back_default;
