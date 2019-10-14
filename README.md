@@ -77,6 +77,16 @@ can  move button to top by inline-block and vertical-align top
 Asynchronous is huge in JS.  
 block is bad
 
+Recap:  browsers make GET request to server to get HTML
+          can make request every page or SPA 1x and load entire site.
+        javascript runs on browser
+        responds to events
+        can make API calls (next class) & manipulate dom.
+        
 
+
+
+next time content: <select><option>
+async
 
 DAY TWO
