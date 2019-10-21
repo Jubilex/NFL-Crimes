@@ -6,53 +6,102 @@
 </head>
 
 <body>
-	<select name="foo" id="pokemonDropdown">
-	<option value="empty"></option></select>
-	<input type="text" id="pokemonInput" />
+	<select name="pokemonDropdown" id="pokemonDropdown">
+	    <option value="empty"></option>
+    </select>
 	<button onclick="getPokemonImage()">Get Image</button>
 	<img />
 	<div id="errorMessage" style="color: red"></div>
-</body>
 <script>
-	document.addEventListener("DOMContentLoaded", async function (event) {
-		const allPokemon = await getAllPokemon();
-		const pokemonDropdown = document.getElementById('pokemonDropdown');
+
+    // Wire up an event listener for when the DOM is loaded.
+    document.addEventListener("DOMContentLoaded", domLoadedEvent);
+
+    //**********************************************************************************
+    // This function is called once the DOM is loaded in memory.  We proactively
+    // get the list of pokemon from the server and populate our dropdown list with the values.
+    //**********************************************************************************
+    async function domLoadedEvent() {
+
+        // Go to the pokemon API and get a list of all pokemon
+        const allPokemon = await getAllPokemon();
+
+        // Get a reference to our dropdown HTML element
+        const pokemonDropdown = document.getElementById('pokemonDropdown');
+
+        // Loop through all pokemon and add them to our dropdown 1 at a time.
 		allPokemon.results.forEach(element => {
 			pokemonDropdown.innerHTML += `<option value="${element.name}">${element.name}</option>`;
 		});
-	});
+	};
 
-	async function getPokemonImage() {
-		const name = document.getElementById('pokemonDropdown').value;
+    //**********************************************************************************
+    // This function will get the current selected pokemon in the dropdown
+    // and fetch the pokemon data and then show the image of the pokemon.  It is called
+    // whenever somebody clicks the Get Image button.
+    //**********************************************************************************
+    async function getPokemonImage() {
+
+        // Get a reference to our dropdown list in the DOM
+        const name = document.getElementById('pokemonDropdown').value;
+
+        // Get the data for that pokemon from the pokemon API
 		const pokemonImageUrl = await getPokemonData(name);
-		console.log(pokemonImageUrl);
+
+        // Display the image of the pokemon
 		displayPokemon(pokemonImageUrl);
 	}
 
-	async function getAllPokemon() {
-		const foo = fetch('https://pokeapi.co/api/v2/pokemon?limit=964');
-		const res = await foo;
-		const allPokemon = await res.json();
+    //**********************************************************************************
+    // This function will go to the pokemon API and fetch the list of all pokemon.
+    //**********************************************************************************
+    async function getAllPokemon() {
+        // Get the JSON data from the pokemon API
+        const data = await fetch('https://pokeapi.co/api/v2/pokemon?limit=964');
+
+        // Deserialize the JSON data
+        const allPokemon = await data.json();
 		return allPokemon;
 	}
 
-	async function getPokemonData(name) {
-		let foo = fetch('https://pokeapi.co/api/v2/pokemon/' + name);
-		const res = await foo;
-		if (res.status !== 200) {
-			if (res.status === 404) {
-				document.getElementById('errorMessage').innerHTML = "Could not find " + name;
+    //**********************************************************************************
+    // This function, given the name of a pokemon, goes to the pokemon API and fetches
+    // the data for that pokemon.
+    //**********************************************************************************
+    async function getPokemonData(name) {
+        // Get the JSON data from the API for this pokemon.  
+        const data = await fetch('https://pokeapi.co/api/v2/pokemon/' + name);
+
+        // Check if HTTP status return code is 200.  If NOT, then display the
+        // appropriate error message.
+        if (data.status !== 200) {
+
+            // HTTP status code of 404 means not found.
+			if (data.status === 404) {
+                document.getElementById('errorMessage').innerHTML = "Could not find " + name;
+            // All other status codes just display a generic error.
 			} else {
 				document.getElementById('errorMessage').innerHTML = "Unknown error";
 			}
 
-		}
-		const pokemon = await res.json();
+        }
+
+        // Deserialize and return the JSON data
+		const pokemon = await data.json();
 		return pokemon;
-	}
+    }
+
+    //**********************************************************************************
+    // Take the pokemon they pass to us and set our img HTML tag to display it.
+    //**********************************************************************************
 	function displayPokemon(pokemon) {
 		document.getElementsByTagName('img')[0].src = pokemon.sprites.back_default;
 	}
 </script>
+</body>
 
 </html>
+
+
+// TODO: clear error if they have one up on next try
+// have an input where supercedes which pokemon to get over dropdown.
