@@ -13,6 +13,13 @@
 	<img />
 	<div id="errorMessage" style="color: red"></div>
 <script>
+    // ************************************
+    // TODO
+    // TODO: Add an element where a user can type in a pokemon name manually.
+    // TODO: If the user has typed something in this element, try to display the pokemon
+    // TODO: the user typed instead of the pokemon in the dropdown list.
+    // TODO
+    // ************************************
 
     // Wire up an event listener for when the DOM is loaded.
     document.addEventListener("DOMContentLoaded", domLoadedEvent);
@@ -97,11 +104,8 @@
 	function displayPokemon(pokemon) {
 		document.getElementsByTagName('img')[0].src = pokemon.sprites.back_default;
 	}
+
 </script>
 </body>
 
 </html>
-
-
-// TODO: clear error if they have one up on next try
-// have an input where supercedes which pokemon to get over dropdown.
